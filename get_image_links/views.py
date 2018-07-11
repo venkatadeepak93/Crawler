@@ -8,6 +8,8 @@ import json
 class ImageView(APIView):
     def get(self, request):
         seed_url = request.GET.get('seed_url')
+        if not seed_url.startswith('http'):
+            seed_url = 'https://'+seed_url
         depth = request.GET.get('depth')
         image_collector = ImageCollecter(seed_url, depth)
         image_links = image_collector.fetch_image_links()
@@ -29,7 +31,6 @@ class ImageCollecter(object):
         visited = []
         all_urls = [self.seed_url]
         depth = 0
-
         while(depth <= int(self.depth) and all_urls != [] ):
             sub_urls = []
             for url in all_urls:
